@@ -33,7 +33,9 @@ config MACH_RK30_CUBE_U30GT
 	
 config MACH_ODYS_GENIO
         bool "Odys Genio MID device"
-	
+
+config MACH_PLOYER_MOMO7
+	bool "Ployer MOMO7 MID device"
 endchoice
 
 endif

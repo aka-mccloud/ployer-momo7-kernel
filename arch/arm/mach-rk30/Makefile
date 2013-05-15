@@ -31,4 +31,4 @@ obj-$(CONFIG_MACH_RK30_PHONE_A22) += board-rk30-phone-a22.o board-rk30-phone-a22
 obj-$(CONFIG_MACH_PIPO_M3) += board-pipo-m3.o board-rk30-sdk-key.o
 obj-$(CONFIG_MACH_RK30_CUBE_U30GT) += board-cube-u30gt.o board-rk30-sdk-key.o
 obj-$(CONFIG_MACH_ODYS_GENIO) += board-odys-genio.o board-rk30-sdk-key.o
-
+obj-$(CONFIG_MACH_PLOYER_MOMO7) += board-ployer-momo7.o board-rk30-sdk-key.o
