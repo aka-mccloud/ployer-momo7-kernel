@@ -10,12 +10,6 @@
 #include <linux/err.h>
 #include <linux/slab.h>
 
-#ifdef CONFIG_ARCH_RK30
-#define RK610_RESET_PIN   RK30_PIN1_PD6
-#else
-#define RK610_RESET_PIN   RK29_PIN6_PC1
-#endif
-
 /*
  * Debug
  */
@@ -123,11 +117,6 @@ void rk610_control_init_codec(void)
     if(rk610_control_client == NULL)
     	return;
 	DBG("[%s] start\n", __FUNCTION__);
-
-    //gpio_set_value(RK610_RESET_PIN, GPIO_LOW); //reset rk601
-   // mdelay(100);
-    //gpio_set_value(RK610_RESET_PIN, GPIO_HIGH);
-    //mdelay(100);
 
    	// Set i2c glitch timeout.
 	data = 0x22;
@@ -238,19 +227,7 @@ static int rk610_control_probe(struct i2c_client *client,
 
     rk610_control_client = client;
     msleep(100);
-	if(RK610_RESET_PIN != INVALID_GPIO) {
-	    ret = gpio_request(RK610_RESET_PIN, "rk610 reset");
-	    if (ret){
-	        printk(KERN_ERR "rk610_control_probe request gpio fail\n");
-	    }
-	    else {
-	    	DBG("rk610_control_probe request gpio ok\n");
-	    	gpio_direction_output(RK610_RESET_PIN, GPIO_HIGH);
-		    gpio_direction_output(RK610_RESET_PIN, GPIO_LOW);
-			msleep(100);
-		    gpio_set_value(RK610_RESET_PIN, GPIO_HIGH);
-		}
-	}
+
     core_info->client = client;
 	rk610_lcd_init(core_info);
 	#ifdef RK610_DEBUG

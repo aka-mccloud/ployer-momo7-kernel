@@ -25,7 +25,7 @@
 
 #define RK30_MAX_LCDC_SUPPORT	4
 #define RK30_MAX_LAYER_SUPPORT	4
-#ifdef CONFIG_MFD_RK610
+#if 0 //#ifdef CONFIG_MFD_RK610
 #define RK_MAX_FB_SUPPORT       8
 #else
 #define RK_MAX_FB_SUPPORT     4
@@ -146,7 +146,7 @@ enum data_format{
 	YUV444,
 };
 
-#ifdef CONFIG_MFD_RK610
+#if 0 //#ifdef CONFIG_MFD_RK610
 enum fb_win_map_order{
 	FB_DEFAULT_ORDER	   = 0,
 	FB0_WIN2_FB1_WIN1_FB2_WIN0 = 012,
@@ -209,7 +209,7 @@ struct rk_lcdc_device_driver{
 	int num_layer;
 	int num_buf;				//the num_of buffer
 	int fb_index_base;                     //the first fb index of the lcdc device
-#ifdef CONFIG_MFD_RK610
+#if 0 //#ifdef CONFIG_MFD_RK610
 	rk_screen *screen0;		      //some platform have only one lcdc,but extend
 	rk_screen *screen1;		      //two display devices for dual display,such as rk2918,rk2928
 	rk_screen *cur_screen;		     //screen0 is primary screen ,like lcd panel,screen1 is  extend screen,like hdmi
@@ -235,7 +235,7 @@ struct rk_lcdc_device_driver{
 	int (*blank)(struct rk_lcdc_device_driver *dev_drv,int layer_id,int blank_mode);
 	int (*set_par)(struct rk_lcdc_device_driver *dev_drv,int layer_id);
 	int (*pan_display)(struct rk_lcdc_device_driver *dev_drv,int layer_id);
-#ifdef CONFIG_MFD_RK610
+#if 0 //#ifdef CONFIG_MFD_RK610
 	ssize_t (*get_disp_info)(struct rk_lcdc_device_driver *dev_drv,char *buf,int layer_id);
 #else
 	int (*get_disp_info)(struct rk_lcdc_device_driver *dev_drv,int layer_id);
@@ -244,7 +244,7 @@ struct rk_lcdc_device_driver{
 	int (*get_layer_state)(struct rk_lcdc_device_driver *dev_drv,int layer_id);
 	int (*ovl_mgr)(struct rk_lcdc_device_driver *dev_drv,int swap,bool set);  //overlay manager
 	int (*fps_mgr)(struct rk_lcdc_device_driver *dev_drv,int fps,bool set);
-#ifdef CONFIG_MFD_RK610
+#if 0 //#ifdef CONFIG_MFD_RK610
 	int (*fb_get_layer)(struct rk_lcdc_device_driver *dev_drv,const char *id);                                      //find layer for fb
 	int (*fb_layer_remap)(struct rk_lcdc_device_driver *dev_drv,enum fb_win_map_order order);
 #endif

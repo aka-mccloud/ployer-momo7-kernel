@@ -72,6 +72,7 @@
 #if defined(CONFIG_ANDROID_TIMED_GPIO)
 #include "../../../drivers/staging/android/timed_gpio.h"
 #endif
+
 #ifdef CONFIG_TOUCHSCREEN_GT82X_IIC
 #include <linux/goodix_touch_82x.h>
 #endif
@@ -687,7 +688,7 @@ static struct ft5x0x_platform_data ft5x0x_info = {
 };
 #endif
 
-#if defined(CONFIG_TOUCHSCREEN_GT8XX)
+#if defined (CONFIG_TOUCHSCREEN_GT8XX)
 #define TOUCH_RESET_PIN  RK30_PIN4_PD0
 #define TOUCH_PWR_PIN    INVALID_GPIO
 int goodix_init_platform_hw(void)
@@ -2153,36 +2154,6 @@ static struct i2c_board_info __initdata i2c0_info[] = {
         },
 #endif
 
-#ifdef CONFIG_MFD_RK610
-		{
-			.type			= "rk610_ctl",
-			.addr			= 0x40,
-			.flags			= 0,
-		},
-#ifdef CONFIG_RK610_TVOUT
-		{
-			.type			= "rk610_tvout",
-			.addr			= 0x42,
-			.flags			= 0,
-		},
-#endif
-#ifdef  CONFIG_HDMI_RK610
-		{
-			.type			= "rk610_hdmi",
-			.addr			= 0x46,
-			.flags			= 0,
-			.irq			= RK30_PIN6_PB4,
-		},
-#endif
-#ifdef CONFIG_SND_SOC_RK610
-		{//RK610_CODEC addr  from 0x60 to 0x80 (0x60~0x80)
-			.type			= "rk610_i2c_codec",
-			.addr			= 0x60,
-			.flags			= 0,
-		},
-#endif
-#endif
-
 };
 #endif
 #define PMIC_TYPE_WM8326	1
@@ -2245,6 +2216,36 @@ static struct i2c_board_info __initdata i2c1_info[] = {
                  .irq            = RK30_PIN6_PA0,
          },
  #endif
+
+#ifdef CONFIG_MFD_RK610
+		{
+			.type			= "rk610_ctl",
+			.addr			= 0x40,
+			.flags			= 0,
+		},
+#ifdef CONFIG_RK610_TVOUT
+		{
+			.type			= "rk610_tvout",
+			.addr			= 0x42,
+			.flags			= 0,
+		},
+#endif
+#ifdef  CONFIG_HDMI_RK610
+		{
+			.type			= "rk610_hdmi",
+			.addr			= 0x46,
+			.flags			= 0,
+			.irq			= RK30_PIN6_PB4,
+		},
+#endif
+#ifdef CONFIG_SND_SOC_RK610
+		{//RK610_CODEC addr  from 0x60 to 0x80 (0x60~0x80)
+			.type			= "rk610_i2c_codec",
+			.addr			= 0x60,
+			.flags			= 0,
+		},
+#endif
+#endif
 };
 #endif
 
@@ -2422,7 +2423,7 @@ static struct i2c_board_info __initdata i2c2_info[] = {
 		.platform_data = &ts_pdata,
 	},
 #endif
-#if defined(CONFIG_TOUCHSCREEN_CT36X)
+#if defined (CONFIG_TOUCHSCREEN_CT36X)
 {
     .type       ="ct3610_ts",
     .addr       =0x01,

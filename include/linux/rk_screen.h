@@ -1,7 +1,7 @@
 #ifndef _SCREEN_H
 #define _SCREEN_H
 
-#ifdef CONFIG_MFD_RK610
+#if 0 //#ifdef CONFIG_MFD_RK610
 #else
 #ifdef CONFIG_HDMI_DUAL_DISP
 /* Scaler PLL CONFIG */
@@ -107,7 +107,7 @@ typedef struct rk29fb_screen {
 	u16 type;
 	u16 hw_format;
 	u16 face;
-#ifdef CONFIG_MFD_RK610
+#if 0 //#ifdef CONFIG_MFD_RK610
 	u8 lcdc_id;    //which output interface the screeen connect to
 	u8 screen_id; //screen number
 #endif
@@ -165,7 +165,7 @@ typedef struct rk29fb_screen {
 	u8 swap_delta;
 	u8 swap_dumy;
 
-#ifdef CONFIG_MFD_RK610
+#if 0 //#ifdef CONFIG_MFD_RK610
 	int xpos;  //horizontal display start position on the sceen ,then can be changed by application
 	int ypos;
 	int xsize; //horizontal and vertical display size on he screen,they can be changed by application

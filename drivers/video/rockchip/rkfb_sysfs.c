@@ -40,11 +40,7 @@ static ssize_t show_screen_info(struct device *dev,
 	struct fb_info *fbi = dev_get_drvdata(dev);
 	struct rk_lcdc_device_driver * dev_drv = 
 		(struct rk_lcdc_device_driver * )fbi->par;
-#ifdef CONFIG_MFD_RK610
-	rk_screen * screen = dev_drv->screen0;
-#else
 	rk_screen * screen = dev_drv->screen;
-#endif
 	int fps;
 	u64 ft = (u64)(screen->upper_margin + screen->lower_margin + screen->y_res +screen->vsync_len)*
 		(screen->left_margin + screen->right_margin + screen->x_res + screen->hsync_len)*
@@ -60,15 +56,9 @@ static ssize_t show_disp_info(struct device *dev,
 	struct fb_info *fbi = dev_get_drvdata(dev);
 	struct rk_lcdc_device_driver * dev_drv = 
 		(struct rk_lcdc_device_driver * )fbi->par;
-#ifdef CONFIG_MFD_RK610
-	int layer_id = dev_drv->fb_get_layer(dev_drv,fbi->fix.id);
-	if(dev_drv->get_disp_info)
-		return dev_drv->get_disp_info(dev_drv,buf,layer_id);
-#else
 	int layer_id = get_fb_layer_id(&fbi->fix);
 	if(dev_drv->get_disp_info)
 		dev_drv->get_disp_info(dev_drv,layer_id);
-#endif
 
 	return 0;
 }
@@ -96,11 +86,7 @@ static ssize_t show_fb_state(struct device *dev,
 	struct fb_info *fbi = dev_get_drvdata(dev);
 	struct rk_lcdc_device_driver * dev_drv = 
 		(struct rk_lcdc_device_driver * )fbi->par;
-#ifdef CONFIG_MFD_RK610
-	int layer_id = dev_drv->fb_get_layer(dev_drv,fbi->fix.id);
-#else
 	int layer_id = get_fb_layer_id(&fbi->fix);
-#endif
 	int state = dev_drv->get_layer_state(dev_drv,layer_id);
 	return snprintf(buf, PAGE_SIZE, "%s\n",state?"enabled":"disabled");
 	
@@ -111,11 +97,7 @@ static ssize_t set_fb_state(struct device *dev,struct device_attribute *attr,
 	struct fb_info *fbi = dev_get_drvdata(dev);
 	struct rk_lcdc_device_driver * dev_drv = 
 		(struct rk_lcdc_device_driver * )fbi->par;
-#ifdef CONFIG_MFD_RK610
-	int layer_id = dev_drv->fb_get_layer(dev_drv,fbi->fix.id);
-#else
 	int layer_id = get_fb_layer_id(&fbi->fix);
-#endif
 	int state;
 	int ret;
 	ret = kstrtoint(buf, 0, &state);
@@ -206,108 +188,6 @@ static ssize_t set_fps(struct device *dev,struct device_attribute *attr,
 	return count;
 }
 
-#ifdef CONFIG_MFD_RK610
-static ssize_t show_fb_win_map(struct device *dev,
-		struct device_attribute *attr, char *buf)
-{
-	int ret;
-	struct fb_info *fbi = dev_get_drvdata(dev);
-	struct rk_lcdc_device_driver * dev_drv = 
-		(struct rk_lcdc_device_driver * )fbi->par;
-
-	mutex_lock(&dev_drv->fb_win_id_mutex);
-	ret = snprintf(buf, PAGE_SIZE,"fb0:win%d\nfb1:win%d\nfb2:win%d\n",dev_drv->fb0_win_id,dev_drv->fb1_win_id,
-		dev_drv->fb2_win_id);
-	mutex_unlock(&dev_drv->fb_win_id_mutex);
-
-	return ret;
-	
-}
-
-static ssize_t set_fb_win_map(struct device *dev,struct device_attribute *attr,
-	const char *buf, size_t count)
-{
-	struct fb_info *fbi = dev_get_drvdata(dev);
-	struct rk_lcdc_device_driver * dev_drv = 
-		(struct rk_lcdc_device_driver * )fbi->par;
-	int order;
-	int ret;
-	ret = kstrtoint(buf, 0, &order);
-	if((order != FB0_WIN2_FB1_WIN1_FB2_WIN0) && (order != FB0_WIN1_FB1_WIN2_FB2_WIN0 ) &&
-	   (order != FB0_WIN2_FB1_WIN0_FB2_WIN1) && (order != FB0_WIN0_FB1_WIN2_FB2_WIN1 ) &&
-	   (order != FB0_WIN0_FB1_WIN1_FB2_WIN2) && (order != FB0_WIN1_FB1_WIN0_FB2_WIN2 ))
-	{
-		printk(KERN_ERR "un support map\nyou can use the following order: \
-			\n201:\nfb0-win1\nfb1-win0\nfb2-win2\n			   \
-			\n210:\nfb0-win0\nfb1-win1\nfb2-win2\n			  \
-			\n120:\nfb0-win0\nfb1-win2\nfb2-win1\n			  \
-			\n102:\nfb0-win2\nfb1-win0\nfb2-win1\n			   \
-			\n021:\nfb0-win1\nfb1-win2\nfb2-win0\n			   \
-			\n012:\nfb0-win2\nfb1-win1\nfb2-win0\n");
-		return count;
-	}
-	else
-	{
-		dev_drv->fb_layer_remap(dev_drv,order);
-	}
-
-	return count;
-}
-#endif
-
-static ssize_t show_dsp_lut(struct device *dev,
-		struct device_attribute *attr, char *buf)
-{
-	
-}
-static ssize_t set_dsp_lut(struct device *dev,struct device_attribute *attr,
-	const char *buf, size_t count)
-{
-	int dsp_lut[256];
-	char *start = buf;
-	int i=256,j,temp;
-	int space_max = 10;
-
-	struct fb_info *fbi = dev_get_drvdata(dev);
-	struct rk_lcdc_device_driver * dev_drv = 
-		(struct rk_lcdc_device_driver * )fbi->par;
-	
-	for(i=0;i<256;i++)
-	{
-		temp = i;
-		dsp_lut[i] = temp + (temp<<8) + (temp<<16);  //init by default value
-	}
-	//printk("count:%d\n>>%s\n\n",count,start);
-	for(i=0;i<256;i++)
-	{
-		space_max = 10;  //max space number 10;
-		temp = simple_strtoul(start,NULL,10);
-		dsp_lut[i] = temp;
-		do
-		{
-			start++;
-			space_max--;
-		}while ((*start != ' ')&&space_max);
-		
-		if(!space_max)
-			break;
-		else
-			start++;
-	}
-#if 0
-	for(i=0;i<16;i++)
-	{
-		for(j=0;j<16;j++)
-			printk("0x%08x ",dsp_lut[i*16+j]);
-		printk("\n");
-	}
-#endif
-	dev_drv->set_dsp_lut(dev_drv,dsp_lut);
-
-	return count;
-	
-}
-
 static struct device_attribute rkfb_attrs[] = {
 	__ATTR(phys_addr, S_IRUGO, show_phys, NULL),
 	__ATTR(virt_addr, S_IRUGO, show_virt, NULL),
@@ -316,10 +196,6 @@ static struct device_attribute rkfb_attrs[] = {
 	__ATTR(enable, S_IRUGO | S_IWUSR, show_fb_state, set_fb_state),
 	__ATTR(overlay, S_IRUGO | S_IWUSR, show_overlay, set_overlay),
 	__ATTR(fps, S_IRUGO | S_IWUSR, show_fps, set_fps),
-#ifdef CONFIG_MFD_RK610
-	__ATTR(map, S_IRUGO | S_IWUSR, show_fb_win_map, set_fb_win_map),
-#endif
-	__ATTR(dsp_lut, S_IRUGO | S_IWUSR, show_dsp_lut, set_dsp_lut),
 };
 
 int rkfb_create_sysfs(struct fb_info *fbi)

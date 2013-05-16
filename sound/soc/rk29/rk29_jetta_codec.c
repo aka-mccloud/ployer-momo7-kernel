@@ -127,7 +127,7 @@ static struct snd_soc_ops rk29_ops = {
 static struct snd_soc_dai_link rk29_dai = {
 	.name = "RK610_CODEC",
 	.stream_name = "RK610 CODEC PCM",
-	.codec_name = "RK610_CODEC.0-0060",
+	.codec_name = "RK610_CODEC.1-0060",
 	.platform_name = "rockchip-audio",
 #if defined(CONFIG_SND_RK29_SOC_I2S_8CH)	
 	.cpu_dai_name = "rk29_i2s.0",

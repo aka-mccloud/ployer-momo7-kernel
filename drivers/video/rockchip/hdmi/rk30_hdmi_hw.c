@@ -4,8 +4,6 @@
 #include "rk30_hdmi.h"
 #include "rk30_hdmi_hw.h"
 
-extern void codec_set_spk(bool on);
-
 static char edid_result = 0;
 
 static inline void delay100us(void)
@@ -545,7 +543,6 @@ int rk30_hdmi_config_audio(struct hdmi_audio *audio)
     HDMIWrReg(LR_SWAP_N3, (N >> 16) & 0x0F); 
     
     rk30_hdmi_config_aai();
-    codec_set_spk(false);
     return 0;
 }
 
@@ -601,7 +598,6 @@ int rk30_hdmi_removed(void)
 			hdmi->hdcp_power_off_cb();
 		rk30_hdmi_set_pwr_mode(PWR_SAVE_MODE_A);
 	}
-	codec_set_spk(true);
 	dev_printk(KERN_INFO , hdmi->dev , "Removed.\n");
 	return HDMI_ERROR_SUCESS;
 }
